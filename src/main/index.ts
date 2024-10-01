@@ -1,11 +1,26 @@
-import * as dotenv from 'dotenv';
-import express from 'express';
+import { TweetController } from '../main/controllers/tweetController'; // Ensure you have the correct path to TweetController
 import logger from './config/logger';
-dotenv.config();
+import * as fs from 'fs';
 
-const port = process.env.PORT || 3000;
-const app = express();
-app.listen(port, () => {
-    
-    logger.info(`Your wonderful server is running in port: ${port} !!!`);
-  });
+const [reviewsFile, moviesFile] = process.argv.slice(2);
+
+// Check if both files are provided
+if (!reviewsFile || !moviesFile) {
+    logger.error('Please provide both reviews.json and movies.json as arguments.');
+    process.exit(1);
+}
+
+// Check if the review file exists
+if (!fs.existsSync(reviewsFile)) {
+    logger.error(`Reviews file not found: ${reviewsFile}`);
+    process.exit(1);
+}
+
+// Check if the movie file exists
+if (!fs.existsSync(moviesFile)) {
+    logger.error(`Movies file not found: ${moviesFile}`);
+    process.exit(1);
+}
+
+const tweetController = new TweetController(reviewsFile, moviesFile);
+tweetController.generateTweets();

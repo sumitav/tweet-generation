@@ -26,13 +26,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv = __importStar(require("dotenv"));
-const express_1 = __importDefault(require("express"));
+const tweetController_1 = require("../main/controllers/tweetController"); // Ensure you have the correct path to TweetController
 const logger_1 = __importDefault(require("./config/logger"));
-dotenv.config();
-const port = process.env.PORT;
-const app = (0, express_1.default)();
-app.listen(port, () => {
-    logger_1.default.info(`Your wonderful server is running in port: ${port} !!!`);
-});
+const fs = __importStar(require("fs"));
+const [reviewsFile, moviesFile] = process.argv.slice(2);
+// Check if both files are provided
+if (!reviewsFile || !moviesFile) {
+    logger_1.default.error('Please provide both reviews.json and movies.json as arguments.');
+    process.exit(1);
+}
+// Check if the review file exists
+if (!fs.existsSync(reviewsFile)) {
+    logger_1.default.error(`Reviews file not found: ${reviewsFile}`);
+    process.exit(1);
+}
+// Check if the movie file exists
+if (!fs.existsSync(moviesFile)) {
+    logger_1.default.error(`Movies file not found: ${moviesFile}`);
+    process.exit(1);
+}
+const tweetController = new tweetController_1.TweetController(reviewsFile, moviesFile);
+tweetController.generateTweets();
 //# sourceMappingURL=index.js.map
