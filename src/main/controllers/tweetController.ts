@@ -9,16 +9,27 @@ export class TweetController {
     private reviewService: ReviewService;
     private movieService: MovieService;
     private tweetService: TweetService;
-
+    /**
+     * 
+     * @param reviewsFile 
+     * @param moviesFile 
+     */
     constructor(reviewsFile: string, moviesFile: string) {
         this.reviewService = new ReviewService(reviewsFile);
         this.movieService = new MovieService(moviesFile);
         this.tweetService = new TweetService();
     }
+    /**
+     * 
+     */
     public generateTweets() {
         const tweets = this.collectTweets(); // Collect tweets in a separate private method
         this.saveTweets(tweets); // Save tweets in a separate private method
     }
+    /**
+     * 
+     * @returns 
+     */
     private collectTweets(): string[] {
         const reviews = this.reviewService.getAllReviews();
         const tweets: string[] = [];
@@ -32,6 +43,10 @@ export class TweetController {
 
         return tweets;
     }
+    /**
+     * 
+     * @param tweets 
+     */
     private saveTweets(tweets: string[]) {
         const outputDir = path.join(process.cwd(), 'src/main/data'); // Change to use process.cwd()
         const outputFile = path.join(outputDir, 'output_tweet.json');

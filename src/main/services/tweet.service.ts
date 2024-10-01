@@ -10,7 +10,6 @@ export class TweetService {
      * @returns A formatted tweet string.
      */
     generateTweet(review: Review, year: number): string {
-        // Input validation
         if (!review || typeof review !== 'object' || !review.title || !review.review || review.score === undefined) {
             logger.error('Invalid review object provided to generateTweet');
             return 'Invalid review';
