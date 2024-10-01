@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import logger from '../config/logger'; // Ensure you have a logger set up
+import { FileReadException } from '../exceptions/FileReadException';
 
 export class FileReader {
     /**
@@ -11,7 +12,7 @@ export class FileReader {
     static readJSON<T>(filePath: string): T {
         if (typeof filePath !== 'string' || filePath.trim() === '') {
             logger.error('Invalid file path provided to readJSON');
-            throw new Error('Invalid file path');
+            throw new FileReadException('Invalid file path');
         }
 
         try {
@@ -19,7 +20,7 @@ export class FileReader {
             return JSON.parse(fileData);
         } catch (error) {
             logger.error(`Error reading JSON file at ${filePath}: ${error.message}`);
-            throw new Error(`Could not read or parse JSON file: ${filePath}`);
+            throw new FileReadException(`Could not read or parse JSON file: ${filePath}`);
         }
     }
 }

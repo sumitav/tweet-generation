@@ -1,3 +1,6 @@
+import { InputValidationException } from "../exceptions/InputValidationException";
+import { RatingException } from "../exceptions/RatingException";
+
 export class StringFormatter {
     /**
      * Convert rating (0-100) into Unicode stars.
@@ -8,7 +11,7 @@ export class StringFormatter {
      */
      public static formatRating(score: number): string {
         if (score < 0 || score > 100) {
-            throw new Error('Score must be between 0 and 100');
+            throw new RatingException('Score must be between 0 and 100');
         }
         score /= 20;
         const rate = Math.round(score);
@@ -37,10 +40,10 @@ export class StringFormatter {
     public static trimToFit(movieTitle: string, year: number, review: string, stars: string): string {
         // Construct the initial tweet
         if (typeof movieTitle !== 'string' || typeof review !== 'string') {
-            throw new Error('Invalid input: movieTitle and review must be strings');
+            throw new InputValidationException('Invalid input: movieTitle and review must be strings');
         }
         if (typeof year !== 'number') {
-            throw new Error('Invalid input: year must be a number');
+            throw new InputValidationException('Invalid input: year must be a number');
         }
         let tweet = `${movieTitle}${year==0 ? '' : ` (${year})`}: ${review} ${stars}`;
 
