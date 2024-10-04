@@ -1,8 +1,9 @@
 import { Review } from '../models/review.model';
 import { StringFormatter } from '../utils/stringFormatter';
 import logger from '../config/logger'; // Ensure you have a logger set up
+import { ITweetService } from '../interfaces/tweet.service.interface';
 
-export class TweetService {
+export class TweetService implements ITweetService {
     /**
      * Generates a tweet from a review.
      * @param review - The review object containing title, review text, and score.

@@ -1,8 +1,10 @@
 import { Movie } from '../models/movie.model';
+import { IMovieService } from '../interfaces/movie.service.interface';
 import { FileReader } from '../utils/fileReader';
-import logger from '../config/logger'; // Ensure you have a logger set up
+import logger from '../config/logger';
+import { FileReadException } from '../exceptions/FileReadException';
 
-export class MovieService {
+export class MovieService implements IMovieService {
     private movies: Movie[];
     private movieMap: Map<string, Movie>;
 
@@ -12,8 +14,7 @@ export class MovieService {
             this.movieMap = new Map(this.movies.map(movie => [movie.title, movie]));
         } catch (error) {
             logger.error(`Error reading movies file: ${error.message}`);
-            this.movies = [];
-            this.movieMap = new Map(); // Ensure this is initialized
+            throw new FileReadException(`Failed to read movies from file: ${moviesFile}`);
         }
     }
 

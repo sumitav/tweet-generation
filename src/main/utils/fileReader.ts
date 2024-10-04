@@ -14,12 +14,22 @@ export class FileReader {
             logger.error('Invalid file path provided to readJSON');
             throw new FileReadException('Invalid file path');
         }
+        if (!fs.existsSync(filePath)) {
+            logger.error(`File not found: ${filePath}`);
+            throw new FileReadException(`File not found: ${filePath}`);
+        }
 
         try {
             const fileData = fs.readFileSync(filePath, 'utf8');
             return JSON.parse(fileData);
         } catch (error) {
-            logger.error(`Error reading JSON file at ${filePath}: ${error.message}`);
+            if (error.code === 'ENOENT') {
+                logger.error(`File does not exist at path: ${filePath}`);
+            } else if (error instanceof SyntaxError) {
+                logger.error(`Invalid JSON format in file: ${filePath}`);
+            } else {
+                logger.error(`Error reading JSON file at ${filePath}: ${error.message}`);
+            }
             throw new FileReadException(`Could not read or parse JSON file: ${filePath}`);
         }
     }

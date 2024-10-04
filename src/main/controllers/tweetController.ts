@@ -1,34 +1,47 @@
-import { ReviewService } from '../services/review.service';
-import { MovieService } from '../services/movie.service';
-import { TweetService } from '../services/tweet.service';
 import logger from '../config/logger';
-import * as fs from 'fs';
-import path from 'path';
+import { Constants } from '../constants/constants';
+import { FileSaveException } from '../exceptions/FileSaveException';
+import { TweetGenerationException } from '../exceptions/TweetGenerationException';
+import { IFileService } from '../interfaces/file.service.interface';
+import { IMovieService } from '../interfaces/movie.service.interface';
+import { IReviewService } from '../interfaces/review.service.interface';
+import { ITweetService } from '../interfaces/tweet.service.interface';
 
 export class TweetController {
-    private reviewService: ReviewService;
-    private movieService: MovieService;
-    private tweetService: TweetService;
-    /**
-     * 
-     * @param reviewsFile 
-     * @param moviesFile 
-     */
-    constructor(reviewsFile: string, moviesFile: string) {
-        this.reviewService = new ReviewService(reviewsFile);
-        this.movieService = new MovieService(moviesFile);
-        this.tweetService = new TweetService();
+    private reviewService: IReviewService;
+    private movieService: IMovieService;
+    private tweetService: ITweetService;
+    private fileService: IFileService;
+    constructor(
+        reviewService: IReviewService,
+        movieService: IMovieService,
+        tweetService: ITweetService,
+        fileService: IFileService
+    ) {
+        this.reviewService = reviewService;
+        this.movieService = movieService;
+        this.tweetService = tweetService;
+        this.fileService = fileService;
     }
+
     /**
-     * 
+     * Generates tweets and saves them to a file.
      */
     public generateTweets() {
-        const tweets = this.collectTweets(); // Collect tweets in a separate private method
-        this.saveTweets(tweets); // Save tweets in a separate private method
+        try {
+            const tweets = this.collectTweets();
+            this.fileService.saveTweets(tweets);
+        }catch (error) {
+           if (error instanceof FileSaveException) {
+                logger.error(`${Constants.FILE_SAVE_ERROR}: ${error.message}`);
+            } else {
+                logger.error(`${Constants.FAILED_TO_GENERATE_TWEETS}: ${error.message}`);
+            }
+        }
     }
-    /**
-     * 
-     * @returns 
+      /**
+     * Collects tweets based on reviews and corresponding movies.
+     * @returns {string[]} An array of generated tweets.
      */
     private collectTweets(): string[] {
         const reviews = this.reviewService.getAllReviews();
@@ -42,27 +55,5 @@ export class TweetController {
         });
 
         return tweets;
-    }
-    /**
-     * 
-     * @param tweets 
-     */
-    private saveTweets(tweets: string[]) {
-        const outputDir = path.join(process.cwd(), 'src/main/data'); // Change to use process.cwd()
-        const outputFile = path.join(outputDir, 'output_tweet.json');
-
-        // Check if the output directory exists and create it if it doesn't
-        if (!fs.existsSync(outputDir)) {
-            logger.info(`Creating directory: ${outputDir}`);
-            fs.mkdirSync(outputDir, { recursive: true });
-        }
-
-        // Write tweets to the output file
-        try {
-            fs.writeFileSync(outputFile, JSON.stringify(tweets, null, 2));
-            logger.info('Tweets generated and saved to output_tweet.json');
-        } catch (error) {
-            logger.error(`Error writing to file: ${error.message}`);
-        }
     }
 }

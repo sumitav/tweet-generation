@@ -1,6 +1,7 @@
 import { TweetController } from '../main/controllers/tweetController'; // Ensure you have the correct path to TweetController
 import logger from './config/logger';
 import * as fs from 'fs';
+import { ServiceFactory } from './factories/ServiceFactory';
 
 const [reviewsFile, moviesFile] = process.argv.slice(2);
 
@@ -22,5 +23,13 @@ if (!fs.existsSync(moviesFile)) {
     process.exit(1);
 }
 
-const tweetController = new TweetController(reviewsFile, moviesFile);
+const reviewService = ServiceFactory.createReviewService(reviewsFile);
+const movieService = ServiceFactory.createMovieService(moviesFile);
+const tweetService = ServiceFactory.createTweetService();
+const fileService = ServiceFactory.createFileService();
+
+// Create TweetController with injected dependencies
+const tweetController = new TweetController(reviewService, movieService, tweetService, fileService);
+
+// Generate and save tweets
 tweetController.generateTweets();

@@ -1,8 +1,9 @@
 import { Review } from '../models/review.model';
 import { FileReader } from '../utils/fileReader';
 import logger from '../config/logger'; // Ensure you have a logger set up
+import { IReviewService } from '../interfaces/review.service.interface';
 
-export class ReviewService {
+export class ReviewService implements IReviewService {
     private reviews: Review[];
 
     constructor(reviewsFile: string) {
@@ -10,7 +11,7 @@ export class ReviewService {
             this.reviews = FileReader.readJSON<Review[]>(reviewsFile);
         } catch (error) {
             logger.error(`Error reading reviews file: ${error.message}`);
-            this.reviews = []; // Initialize to an empty array in case of error
+            this.reviews = [];
         }
     }
 

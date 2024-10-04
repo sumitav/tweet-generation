@@ -11,3 +11,5 @@ coverage/
 # Temporary files
 tmp/
 temp/
+# data
+/output/
