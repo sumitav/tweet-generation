@@ -8,7 +8,9 @@ export class TweetApp {
     private moviesFile: string = '';
 
     constructor(private files: string[]) {}
-
+    /**
+     * method to validate the input arguments and specifying its location
+     */
     public validateFiles(): void {
         if (this.files.length < 2) {
             logger.error('Please provide both reviews.json and movies.json as arguments.');
@@ -31,6 +33,11 @@ export class TweetApp {
         this.checkFileExistence(this.reviewsFile, 'Reviews');
         this.checkFileExistence(this.moviesFile, 'Movies');
     }
+    /**
+     * method to check if file exists
+     * @param file 
+     * @param fileType 
+     */
 
     private checkFileExistence(file: string, fileType: string): void {
         if (!fs.existsSync(file)) {
@@ -38,6 +45,9 @@ export class TweetApp {
             process.exit(1);
         }
     }
+    /**
+     * main entry point of initializing the factory service
+     */
 
     public run(): void {
         const reviewService = ServiceFactory.createReviewService(this.reviewsFile);
