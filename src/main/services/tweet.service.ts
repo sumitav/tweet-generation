@@ -1,6 +1,6 @@
-import { Review } from '../models/review.model';
+import { ReviewDTO } from '../models/review.model';
 import { StringFormatter } from '../utils/stringFormatter';
-import logger from '../config/logger'; // Ensure you have a logger set up
+import logger from '../config/logger';
 import { ITweetService } from '../interfaces/tweet.service.interface';
 
 export class TweetService implements ITweetService {
@@ -10,7 +10,7 @@ export class TweetService implements ITweetService {
      * @param year - The year of the movie.
      * @returns A formatted tweet string.
      */
-    generateTweet(review: Review, year: number): string {
+    generateTweet(review: ReviewDTO, year: number): string {
         if (!review || typeof review !== 'object' || !review.title || !review.review || review.score === undefined) {
             logger.error('Invalid review object provided to generateTweet');
             return 'Invalid review';

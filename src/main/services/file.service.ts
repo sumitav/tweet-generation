@@ -13,14 +13,10 @@ export class FileService implements IFileService {
      */
     public saveTweets(tweets: string[]) {
         const outputFile = path.join(Constants.OUTPUT_DIR, Constants.DEFAULT_TWEET_FILENAME);
-
-        // Check if directory exists, create it if not
         if (!fs.existsSync(Constants.OUTPUT_DIR)) {
             logger.info('Creating output directory');
             fs.mkdirSync(Constants.OUTPUT_DIR, { recursive: true });
         }
-
-        // Write tweets to file
         try {
             fs.writeFileSync(outputFile, JSON.stringify(tweets, null, 2));
             logger.info(`Tweets successfully saved as ${Constants.DEFAULT_TWEET_FILENAME}`);

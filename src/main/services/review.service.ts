@@ -1,14 +1,14 @@
-import { Review } from '../models/review.model';
+import { ReviewDTO } from '../models/review.model';
 import { FileReader } from '../utils/fileReader';
-import logger from '../config/logger'; // Ensure you have a logger set up
+import logger from '../config/logger';
 import { IReviewService } from '../interfaces/review.service.interface';
 
 export class ReviewService implements IReviewService {
-    private reviews: Review[];
+    private reviews: ReviewDTO[];
 
     constructor(reviewsFile: string) {
         try {
-            this.reviews = FileReader.readJSON<Review[]>(reviewsFile);
+            this.reviews = FileReader.readJSON<ReviewDTO[]>(reviewsFile);
         } catch (error) {
             logger.error(`Error reading reviews file: ${error.message}`);
             this.reviews = [];
@@ -19,7 +19,7 @@ export class ReviewService implements IReviewService {
      * Retrieves all reviews.
      * @returns An array of review objects.
      */
-    getAllReviews(): Review[] {
+    getAllReviews(): ReviewDTO[] {
         return this.reviews;
     }
 }

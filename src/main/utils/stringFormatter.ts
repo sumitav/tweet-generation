@@ -10,6 +10,10 @@ export class StringFormatter {
      * @throws Error if the score is not between 0 and 100.
      */
      public static formatRating(score: number): string {
+        if (isNaN(score)) {
+            throw new RatingException('Score must be a valid number');
+        }
+    
         if (score < 0 || score > 100) {
             throw new RatingException('Score must be between 0 and 100');
         }
@@ -38,14 +42,13 @@ export class StringFormatter {
      * @throws Error if movieTitle or review is not a string, or year is not a number.
      */
     public static trimToFit(movieTitle: string, year: number, review: string, stars: string): string {
-        // Construct the initial tweet
         if (typeof movieTitle !== 'string' || typeof review !== 'string') {
             throw new InputValidationException('Invalid input: movieTitle and review must be strings');
         }
-        if (typeof year !== 'number') {
+        if (year && typeof year !== 'number') {
             throw new InputValidationException('Invalid input: year must be a number');
         }
-        let tweet = `${movieTitle}${year==0 ? '' : ` (${year})`}: ${review} ${stars}`;
+        let tweet = `${movieTitle}${year==null ? '' : ` (${year})`}: ${review} ${stars}`;
 
         // If tweet exceeds 140 characters, start trimming
         if (tweet.length > 140) {

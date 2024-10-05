@@ -1,4 +1,4 @@
-export interface Review {
+export class ReviewDTO {
     title: string;
     review: string;
     score: number;

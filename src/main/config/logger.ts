@@ -19,8 +19,6 @@ class Logger {
                     },
                 },
         };
-
-        // Configure logger
         Logger.instance = pino(pinoOptions);
     }
 

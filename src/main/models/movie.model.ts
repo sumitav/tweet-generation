@@ -1,4 +1,4 @@
-export interface Movie {
+export class MovieDTO {
     title: string;
     year?:number;
 }

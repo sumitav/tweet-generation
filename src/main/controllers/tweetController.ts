@@ -1,7 +1,6 @@
 import logger from '../config/logger';
 import { Constants } from '../constants/constants';
 import { FileSaveException } from '../exceptions/FileSaveException';
-import { TweetGenerationException } from '../exceptions/TweetGenerationException';
 import { IFileService } from '../interfaces/file.service.interface';
 import { IMovieService } from '../interfaces/movie.service.interface';
 import { IReviewService } from '../interfaces/review.service.interface';
@@ -49,7 +48,7 @@ export class TweetController {
 
         reviews.forEach(review => {
             const movie = this.movieService.findMovieById(review.title);
-            const year = movie ? movie.year : 0;
+            const year = movie ? movie.year : null;
             const tweet = this.tweetService.generateTweet(review, year);
             tweets.push(tweet);
         });

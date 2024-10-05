@@ -1,5 +1,5 @@
-import { Movie } from '../models/movie.model';
+import { MovieDTO } from '../models/movie.model';
 
 export interface IMovieService {
-    findMovieById(movieId: string): Movie | undefined;
+    findMovieById(movieId: string): MovieDTO | undefined;
 }

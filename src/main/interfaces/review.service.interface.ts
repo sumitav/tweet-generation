@@ -1,5 +1,5 @@
-import { Review } from '../models/review.model';
+import { ReviewDTO } from '../models/review.model';
 
 export interface IReviewService {
-    getAllReviews(): Review[];
+    getAllReviews(): ReviewDTO[];
 }
