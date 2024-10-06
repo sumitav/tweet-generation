@@ -9,6 +9,9 @@ export class ReviewService implements IReviewService {
     constructor(reviewsFile: string) {
         try {
             this.reviews = FileReader.readJSON<ReviewDTO[]>(reviewsFile);
+            if (this.reviews.length === 0) {
+                logger.warn(`The review is empty: ${reviewsFile}`);
+            }
         } catch (error) {
             logger.error(`Error reading reviews file: ${error.message}`);
             this.reviews = [];

@@ -62,4 +62,12 @@ describe('FileService', () => {
         expect(() => fileService.saveTweets(mockTweets)).toThrow(FileSaveException);
         expect(() => fileService.saveTweets(mockTweets)).toThrow('Failed to save tweets to file:');
     });
+    test('should handle saving an empty tweets array', () => {
+        (fs.existsSync as jest.Mock).mockReturnValue(true);
+        (fs.writeFileSync as jest.Mock).mockImplementation(() => {});
+    
+        fileService.saveTweets([]);
+    
+        expect(fs.writeFileSync).toHaveBeenCalledWith(testFilePath, JSON.stringify([], null, 2));
+    });
 });

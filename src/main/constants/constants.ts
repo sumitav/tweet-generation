@@ -5,4 +5,5 @@ export class Constants {
     public static readonly DEFAULT_TWEET_FILENAME: string = 'output_tweet.json';
     public static readonly FAILED_TO_GENERATE_TWEETS: string = 'Failed to generate tweets';
     public static readonly FILE_SAVE_ERROR: string ='Error saving tweets to file';
+    public static readonly FILE_READ_ERROR: string ='Error reading file!';
 }

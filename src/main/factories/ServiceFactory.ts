@@ -2,6 +2,8 @@ import { ReviewService } from '../services/review.service';
 import { MovieService } from '../services/movie.service';
 import { TweetService } from '../services/tweet.service';
 import { FileService } from '../services/file.service';
+import { FileReadException } from '../exceptions/FileReadException';
+import logger from '../config/logger';
 
 export class ServiceFactory {
     /**
@@ -18,8 +20,16 @@ export class ServiceFactory {
      * @param moviesFile - The path to the movies JSON file.
      * @returns An instance of MovieService.
      */
-    static createMovieService(moviesFile: string): MovieService {
-        return new MovieService(moviesFile);
+    public static createMovieService(moviesFile: string): MovieService | null {
+        try {
+            return new MovieService(moviesFile);
+        } catch (error) {
+            if (error instanceof FileReadException) {
+                logger.error(`Error initializing MovieService: ${error.message}`);
+                return null;
+            }
+            throw error;
+        }
     }
 
     /**

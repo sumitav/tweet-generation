@@ -52,6 +52,10 @@ export class TweetApp {
     public run(): void {
         const reviewService = ServiceFactory.createReviewService(this.reviewsFile);
         const movieService = ServiceFactory.createMovieService(this.moviesFile);
+        if (!movieService) {
+            logger.error('MovieService initialization failed. Exiting the program.');
+            return;
+        }
         const tweetService = ServiceFactory.createTweetService();
         const fileService = ServiceFactory.createFileService();
 

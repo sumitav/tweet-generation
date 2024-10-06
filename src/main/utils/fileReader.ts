@@ -12,6 +12,12 @@ export class FileReader {
     static readJSON<T>(filePath: string): T {
         try {
             const fileData = fs.readFileSync(filePath, 'utf8');
+    
+            if (fileData.trim() === '') {
+                logger.warn(`The JSON file is empty: ${filePath}`);
+                return [] as unknown as T;
+            }
+    
             return JSON.parse(fileData);
         } catch (error) {
             if (error instanceof SyntaxError) {

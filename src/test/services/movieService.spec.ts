@@ -2,6 +2,7 @@ import { MovieService } from '../../main/services/movie.service';
 import { FileReadException } from '../../main/exceptions/FileReadException';
 import { MovieDTO } from '../../main/models/movie.model';
 import { FileReader } from '../../main/utils/fileReader';
+import logger from '../../main/config/logger';
 jest.mock('fs');
 jest.mock('../../main/utils/fileReader');
 
@@ -51,4 +52,33 @@ describe('MovieService', () => {
         const foundMovie = movieService.findMovieById('Non-Existent Movie');
         expect(foundMovie).toBeUndefined();
     });
+    test('should initialize movies and movieMap as empty on empty movies file', () => {
+        (FileReader.readJSON as jest.Mock).mockReturnValue([]);
+    
+        const movieService = new MovieService(mockMoviesFilePath);
+    
+        expect(movieService['movies']).toEqual([]);
+        expect(movieService['movieMap'].size).toBe(0);
+    });
+    it('should log an error and throw FileReadException when movies is not an array', () => {
+        const moviesFile = 'movies.json';
+        (FileReader.readJSON as jest.Mock).mockReturnValue({});
+        expect(() => new MovieService(moviesFile)).toThrow(FileReadException);
+    });
+    it('should return true when movies array is empty', () => {
+        const moviesFile = 'movies.json';
+        (FileReader.readJSON as jest.Mock).mockReturnValue([]);
+        const movieService = new MovieService(moviesFile);
+        expect(movieService.isEmpty()).toBe(true);
+    });
+
+    it('should return false when movies array is not empty', () => {
+        const moviesFile = 'movies.json';
+        const mockMovies: MovieDTO[] = [{ title: 'Movie 1', year: 2021 }];
+        (FileReader.readJSON as jest.Mock).mockReturnValue(mockMovies);
+
+        const movieService = new MovieService(moviesFile);
+        expect(movieService.isEmpty()).toBe(false);
+    });
+
 });

@@ -6,6 +6,7 @@ import { IFileService } from '../../main/interfaces/file.service.interface';
 import { FileSaveException } from '../../main/exceptions/FileSaveException';
 import logger from '../../main/config/logger';
 import { Constants } from '../../main/constants/constants';
+import { FileReadException } from '../../main/exceptions/FileReadException';
 
 jest.mock('../../main/config/logger');
 
@@ -23,6 +24,7 @@ describe('TweetController', () => {
 
         mockMovieService = {
             findMovieById: jest.fn(),
+            isEmpty: jest.fn(),
         };
 
         mockTweetService = {
@@ -94,5 +96,41 @@ describe('TweetController', () => {
         expect(mockReviewService.getAllReviews).toHaveBeenCalled();
         expect(mockMovieService.findMovieById).toHaveBeenCalledWith(mockReviews[0].title);
         expect(mockTweetService.generateTweet).toHaveBeenCalledWith(mockReviews[0], null);
+    });
+    it('should log a warning when no tweets are generated due to missing or invalid data', () => {
+        jest.spyOn(tweetController as any, 'collectTweets' as any).mockReturnValueOnce([]);
+        tweetController.generateTweets();
+        expect(logger.warn).toHaveBeenCalledWith('No tweets generated due to missing or invalid data.');
+        expect(mockFileService.saveTweets).not.toHaveBeenCalled();
+    });
+
+    it('should log an error when a FileReadException is thrown', () => {
+        const errorMessage = 'Error reading file';
+        jest.spyOn(tweetController as any, 'collectTweets' as any).mockImplementationOnce(() => {
+            throw new FileReadException(errorMessage);
+        });
+        tweetController.generateTweets();
+        expect(logger.error).toHaveBeenCalledWith(`${Constants.FILE_READ_ERROR}: ${errorMessage}`);
+    });
+    it('should log an error and return an empty array if there is no movie data', () => {
+        // Arrange: Mocking the necessary services
+        const mockReviews = [
+            { title: 'Inception', review: 'A mind-bending thriller!', score: 90 },
+        ];
+        (mockReviewService.getAllReviews as jest.Mock).mockReturnValue(mockReviews);
+        (mockMovieService.isEmpty as jest.Mock).mockReturnValue(true);
+        tweetController.generateTweets();
+       
+        expect(logger.error).toHaveBeenCalledWith('No movie data available. Unable to generate tweets.');
+    });
+    it('should log a warning when movie data is missing for a review', () => {
+        const mockReview = { title: 'Nonexistent Movie', review: 'Great movie!' };
+        (mockReviewService.getAllReviews as jest.Mock).mockReturnValue([mockReview]); 
+        (mockMovieService.isEmpty as jest.Mock).mockReturnValue(false);
+        (mockMovieService.findMovieById as jest.Mock).mockReturnValue(undefined);
+
+        const loggerSpy = jest.spyOn(logger, 'warn').mockImplementation();
+        tweetController.generateTweets();
+        expect(loggerSpy).toHaveBeenCalledWith(`Movie data missing for: ${mockReview.title}`);
     });
 });

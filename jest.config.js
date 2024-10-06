@@ -12,7 +12,8 @@ module.exports = {
       "!**/jest.setup.js",
       "!**/app.handler.ts",
       "!**/index.ts",
-      "!**/*model.ts"
+      "!**/*model.ts",
+      "!**/*Factory.ts"
     ],
     verbose: true,
     moduleFileExtensions: ['ts', 'js', 'json'],

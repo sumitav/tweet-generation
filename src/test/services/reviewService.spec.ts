@@ -1,6 +1,7 @@
 import { ReviewService } from '../../main/services/review.service';
 import { FileReader } from '../../main/utils/fileReader';
 import { ReviewDTO } from '../../main/models/review.model';
+import logger from '../../main/config/logger';
 
 jest.mock('../../main/utils/fileReader.ts');
 
@@ -32,5 +33,14 @@ describe('ReviewService', () => {
 
         const reviewService = new ReviewService(mockReviewsFilePath);
         expect(reviewService.getAllReviews()).toEqual([]);
+    });
+    test('should log a warning when the reviews array is empty', () => {
+        (FileReader.readJSON as jest.Mock).mockReturnValue([]);
+        const reviewsFile = '../../../reviews.json';
+
+        const loggerSpy = jest.spyOn(logger, 'warn').mockImplementation();
+        new ReviewService(reviewsFile);
+        expect(loggerSpy).toHaveBeenCalledTimes(1);
+        expect(loggerSpy).toHaveBeenCalledWith(`The review is empty: ${reviewsFile}`);
     });
 });

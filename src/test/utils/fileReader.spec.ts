@@ -36,4 +36,12 @@ describe('FileReader', () => {
 
         expect(() => FileReader.readJSON(mockFilePath)).toThrow(FileReadException);
     });
+    test('should log a warning and return an empty array when the JSON file is empty', () => {
+        // Arrange
+        (fs.readFileSync as jest.Mock).mockReturnValue('');
+        const filePath = '../../../reviews.json';
+        const result = FileReader.readJSON<any>(filePath);
+        expect(result).toEqual([]); // Check that the return value is an empty array
+    });
+
 });
