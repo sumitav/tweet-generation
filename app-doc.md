@@ -1,25 +1,33 @@
-# Pull Request Description
+# App-Description
 
-This submission introduces a comprehensive Tweet application that facilitates the management and generation of tweets from movie reviews. Built using TypeScript for type safety and maintainability, the architecture is designed to be modular and extensible. The application consists of several key components, including service classes, utility functions, and data models.
+This submission introduces a Tweet application built with TypeScript, designed to generate tweets from employee movie reviews. The app follows a modular, extensible architecture with key components including:
 
 ## Key Components
 
 ### Services
 
-- **TweetService**: Central to the application, this service handles the logic for generating tweets based on movie reviews. It adheres to defined formatting rules, ensuring that each tweet fits within character limits while conveying essential information.
+- **TweetService**: Generates tweets based on movie reviews, ensuring adherence to formatting rules and character limits.
   
-- **MovieService**: Manages the retrieval and storage of movie data, utilizing a mapping structure for efficient lookups by title.
+- **MovieService**: Handles movie data storage and retrieval, optimizing lookups by title.
   
-- **ReviewService**: Responsible for reading and managing reviews, it logs warnings when the review data is empty, ensuring transparency in data handling.
+- **ReviewService**: Manages review data with logging for empty reviews, ensuring transparency.
 
 ### Utility Classes
 
-- **FileReader**: A utility for reading JSON files, which includes robust error handling to manage various file read scenarios, such as empty files or invalid JSON formats.
-  
-- **StringFormatter**: Provides string manipulation methods that assist in formatting tweets and other textual outputs, promoting consistency across the application.
+- **FileReader**: Reads JSON files with robust error handling for invalid formats or missing data.
+
+- **StringFormatter**: Formats tweets and strings, ensuring consistent output.
 
 ## Design Choices
 
-The application follows a layered architecture, separating concerns among services, utilities, and models. This design enhances code readability and testability, allowing individual components to be easily maintained and updated. Extensive error handling and logging are implemented throughout the services to ensure that any issues are promptly reported and do not disrupt the user experience.
+## Design patterns used
 
-Additionally, the application is equipped with unit tests using Jest, covering critical functionalities and edge cases, thereby ensuring reliability and robustness. Overall, the architecture not only supports current functionalities but is also adaptable for future enhancements, such as adding new features or integrating additional data sources.
+- Singleton Pattern: Used for the Logger configuration to ensure that only a single instance of the logger is used across the entire application. 
+
+- Factory Pattern: Used to the service initialization process. For example, when setting up services like TweetService, MovieService, and ReviewService, the factory is responsible for creating instances of these services based on the provided data files.
+
+- Dependency Injection: To maintain loose coupling between components. This ensures that all necessary dependencies, such as the FileService, MovieService,ReviewService,TweetService are injected into the controller at run time.
+
+## Final Notes
+
+The application is built with a layered architecture to separate concerns, improving readability, testability, and maintainability. Comprehensive error handling using custom exceptions and logging are incorporated throughout. 

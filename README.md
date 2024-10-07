@@ -48,6 +48,48 @@ We have provided `tests.json` as a reference for what the provided reviews shoul
 
 From here you can structure your application however you like in order to meet the requirements listed above.
 
+## Installation
+
+To set up and run the Tweet application locally, follow these steps:
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/en/download/) (version 14.x or higher)
+
+- [npm](https://www.npmjs.com/get-npm) (comes with Node.js)
+
+- TypeScript (if not globally installed):
+  ```bash
+  npm install -g typescript
+
+- Clone this repository
+
+Install project dependencies Install all required dependencies using npm:
+
+- npm install
+
+Build the TypeScript project Compile the TypeScript code to JavaScript:
+
+- npm run build
+
+Start the application Run the application:
+
+- npm run start
+
+### Usage
+
+- npm run start reviews.json movies.json
+
+### Testing and Coverage
+
+The application includes unit tests that cover all critical functionalities and edge cases. Jest is used as the testing framework.
+
+- npm run test 
+
+To generate and view code coverage reports(you can locate this inside coverage folder when run locally)
+
+- npm run test:cov
+
 ## Testing
 
 We expect your submission to include a suite of test cases to test the application's functionality.  These can be structured however you like as appropriate for the technology you choose.  At a minimum you should aim to test all requirements described above.
